@@ -20,7 +20,9 @@
 // ============================================================
 
 // ---------- Configuration ----------
-const LIMITE_PAR_IP = 3; // 3 générations gratuites par IP, DÉFINITIF (pas de remise à zéro)
+const LIMITE_PAR_IP = 5; // Plafond serveur DÉFINITIF : 3 gratuites + 2 débloquées par partage.
+                         // Le client (index.html) gère la logique 3 puis +2 ; ce chiffre
+                         // est le mur de sécurité côté serveur, jamais remis à zéro.
 const PLAFOND_GLOBAL_JOUR = 400;      // générations max/jour toutes IP confondues
                                       // (400 × ~0,002€ ≈ moins de 1€/jour de risque max)
 
@@ -120,7 +122,7 @@ export default async function handler(req, res) {
   const rl = verifierRateLimitIP(ip);
   if (!rl.ok) {
     return res.status(429).json({
-      error: `Vous avez utilisé vos ${LIMITE_PAR_IP} générations gratuites. Pour continuer en illimité, obtenez le Système complet (extension Chrome + 50 modèles) pour 29 €.`,
+      error: `Vous avez utilisé toutes vos générations gratuites. Pour continuer en illimité, obtenez le Système complet (extension Chrome + 50 modèles) pour 29 €.`,
     });
   }
 
