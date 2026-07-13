@@ -213,6 +213,39 @@
 </footer>
 
 <script>
+  // ---- Limite définitive : 3 générations gratuites par navigateur ----
+  const LIMITE_GRATUITE = 3;
+  const CLE_STOCKAGE = "a5e_generations_utilisees";
+
+  function generationsUtilisees() {
+    return parseInt(localStorage.getItem(CLE_STOCKAGE) || "0", 10) || 0;
+  }
+  function incrementerGenerations() {
+    localStorage.setItem(CLE_STOCKAGE, String(generationsUtilisees() + 1));
+  }
+  function limiteAtteinte() {
+    return generationsUtilisees() >= LIMITE_GRATUITE;
+  }
+
+  function afficherLimiteAtteinte() {
+    btn.disabled = true;
+    btn.textContent = "3 GÉNÉRATIONS GRATUITES UTILISÉES";
+    err.innerHTML = 'Vous avez utilisé vos 3 générations gratuites. ' +
+      'Pour continuer en illimité, <a href="#kit" style="color:inherit;font-weight:700">obtenez le Système complet — 29&nbsp;€</a> ' +
+      '(extension Chrome + 50 modèles de réponses).';
+    err.classList.add("show");
+  }
+
+  function majCompteurAffiche() {
+    const restantes = Math.max(0, LIMITE_GRATUITE - generationsUtilisees());
+    const el = document.querySelector(".tool-head small");
+    if (el) {
+      el.textContent = restantes > 0
+        ? `Gratuit · Aucune inscription · ${restantes} génération${restantes > 1 ? "s" : ""} restante${restantes > 1 ? "s" : ""}`
+        : "Version gratuite épuisée";
+    }
+  }
+
   let tone = "chaleureux";
   document.querySelectorAll(".tone").forEach(b => b.addEventListener("click", () => {
     document.querySelectorAll(".tone").forEach(x => x.classList.remove("on"));
@@ -224,7 +257,13 @@
         out = document.getElementById("reponse"),
         err = document.getElementById("err");
 
+  // Au chargement : si la limite est déjà atteinte, on verrouille tout de suite
+  majCompteurAffiche();
+  if (limiteAtteinte()) afficherLimiteAtteinte();
+
   btn.addEventListener("click", async () => {
+    if (limiteAtteinte()) { afficherLimiteAtteinte(); return; }
+
     const avis = document.getElementById("avis").value.trim();
     err.classList.remove("show"); result.classList.remove("show");
     if (avis.length < 10) { err.textContent = "Collez d'abord l'avis du client (au moins quelques mots)."; err.classList.add("show"); return; }
@@ -245,11 +284,27 @@
       out.textContent = data.reponse;
       result.classList.add("show");
       result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+      // Génération réussie → on la décompte définitivement
+      incrementerGenerations();
+      majCompteurAffiche();
+      if (limiteAtteinte()) {
+        // On laisse la réponse visible, mais le bouton est verrouillé pour la suite
+        btn.disabled = true;
+        btn.textContent = "3 GÉNÉRATIONS GRATUITES UTILISÉES";
+      } else {
+        btn.disabled = false; btn.textContent = "GÉNÉRER MA RÉPONSE";
+      }
+      return;
     } catch (e) {
-      err.textContent = "La génération a échoué. Réessayez dans un instant.";
+      err.textContent = e.message && e.message !== "Erreur serveur"
+        ? e.message
+        : "La génération a échoué. Réessayez dans un instant.";
       err.classList.add("show");
     } finally {
-      btn.disabled = false; btn.textContent = "GÉNÉRER MA RÉPONSE";
+      if (!limiteAtteinte()) {
+        btn.disabled = false; btn.textContent = "GÉNÉRER MA RÉPONSE";
+      }
     }
   });
 
