@@ -11,33 +11,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Méthode non autorisée" });
   }
-
-  const { avis, metier, ville, ton, source, licenseKey } = req.body || {};
-
-  // L'extension Chrome (produit payant) exige une licence Gumroad valide.
-  // Le site web (version gratuite d'essai) reste libre d'accès.
-  if (source === "extension") {
-    if (!licenseKey || typeof licenseKey !== "string") {
-      return res.status(401).json({ error: "LICENCE_REQUISE" });
-    }
-    try {
-      const lv = await fetch("https://api.gumroad.com/v2/licenses/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          product_id: process.env.GUMROAD_PRODUCT_ID || "",
-          license_key: licenseKey.trim(),
-        }),
-      });
-      const lvData = await lv.json();
-      if (!lvData.success || (lvData.purchase && lvData.purchase.refunded)) {
-        return res.status(401).json({ error: "LICENCE_INVALIDE" });
-      }
-    } catch (e) {
-      console.error("Gumroad license check failed:", e);
-      return res.status(502).json({ error: "Vérification de licence indisponible" });
-    }
-  }
+const { avis, metier, ville, ton } = req.body || {};  
 
   if (!avis || typeof avis !== "string" || avis.trim().length < 10) {
     return res.status(400).json({ error: "Avis manquant ou trop court" });
