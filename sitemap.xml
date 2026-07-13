@@ -2,9 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://artisan5etoiles.fr/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://artisan5etoiles.fr/blog/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://artisan5etoiles.fr/blog/repondre-avis-google-negatif.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <url><loc>https://artisan5etoiles.fr/blog/repondre-avis-google-negatif.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://artisan5etoiles.fr/blog/obtenir-plus-avis-google-artisan.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://artisan5etoiles.fr/blog/optimiser-fiche-google-business-artisan.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://artisan5etoiles.fr/blog/supprimer-faux-avis-google.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://artisan5etoiles.fr/blog/referencement-local-artisan-google.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <url><loc>https://artisan5etoiles.fr/metiers/plombier.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artisan5etoiles.fr/metiers/electricien.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artisan5etoiles.fr/metiers/peintre.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artisan5etoiles.fr/metiers/menuisier.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artisan5etoiles.fr/metiers/macon.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artisan5etoiles.fr/metiers/couvreur.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artisan5etoiles.fr/metiers/paysagiste.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artisan5etoiles.fr/metiers/garagiste.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artisan5etoiles.fr/metiers/carreleur.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artisan5etoiles.fr/metiers/chauffagiste.html</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
