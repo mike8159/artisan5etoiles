@@ -1,0 +1,25 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Supprimer un faux avis Google">
+  <defs>
+    <pattern id="dg4" width="56" height="56" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+      <rect width="56" height="56" fill="#1B2A4A"/>
+      <rect width="56" height="4" fill="#12203B"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#dg4)"/>
+  <text x="70" y="120" font-family="Archivo Black, Arial Black, sans-serif" font-size="26" fill="#F5B301" letter-spacing="4">ARTISAN 5 ÉTOILES · LE BLOG</text>
+  <text x="70" y="235" font-family="Archivo Black, Arial Black, sans-serif" font-size="70" fill="#FFFFFF">Un faux avis ?</text>
+  <text x="70" y="320" font-family="Archivo Black, Arial Black, sans-serif" font-size="70" fill="#F5B301">Faites-le retirer.</text>
+  <!-- avis barré -->
+  <g transform="translate(70,390)">
+    <rect x="0" y="0" width="620" height="180" fill="#FFFFFF" stroke="#1B2A4A" stroke-width="4"/>
+    <text x="26" y="56" font-family="Arial" font-size="28" fill="#C0392B" letter-spacing="6">★☆☆☆☆</text>
+    <text x="26" y="100" font-family="Archivo, Arial" font-size="22" fill="#5C6470">« Jamais mis les pieds ici,</text>
+    <text x="26" y="132" font-family="Archivo, Arial" font-size="22" fill="#5C6470">mais je mets 1 étoile. »</text>
+    <line x1="10" y1="30" x2="610" y2="160" stroke="#C0392B" stroke-width="8"/>
+  </g>
+  <!-- tampon signalé -->
+  <g transform="translate(760,410)">
+    <rect x="0" y="30" width="300" height="90" fill="#F5B301" transform="rotate(-6 150 75)"/>
+    <text x="150" y="92" text-anchor="middle" font-family="Archivo Black, Arial Black" font-size="34" fill="#1B2A4A" transform="rotate(-6 150 75)">SIGNALÉ</text>
+  </g>
+</svg>

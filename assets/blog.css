@@ -1,0 +1,165 @@
+/* ==========================================================
+   Artisan 5 Étoiles — feuille de style du blog
+   Prolonge l'identité du site : navy, jaune, Archivo Black,
+   bordures franches, ombre jaune décalée.
+   ========================================================== */
+
+:root{
+  --navy:#1B2A4A; --navy-deep:#12203B; --yellow:#F5B301; --paper:#F6F4EF;
+  --ink:#22262B; --grey:#5C6470; --line:#DCD8CF; --white:#FFFFFF;
+  --red:#C0392B; --green:#1E7A46;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Archivo',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.wrap-narrow{max-width:760px;margin:0 auto;padding:0 20px}
+.stars{color:var(--yellow);letter-spacing:.35em;font-size:14px}
+img{max-width:100%;height:auto;display:block}
+
+/* ---------- En-tête ---------- */
+header{background:var(--navy);color:var(--white)}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0;gap:14px;flex-wrap:wrap}
+.logo{font-family:'Archivo Black',sans-serif;font-size:17px;letter-spacing:.02em;text-decoration:none;color:var(--white)}
+.logo span{color:var(--yellow)}
+.navlinks{display:flex;align-items:center;gap:18px}
+.navlinks a{color:#C7D0E0;text-decoration:none;font-size:14px;font-weight:600}
+.navlinks a:hover{color:var(--yellow)}
+.navlinks a.cta{background:var(--yellow);color:var(--navy);font-weight:700;
+  padding:9px 16px;border:2px solid var(--yellow)}
+.navlinks a.cta:hover{background:transparent;color:var(--yellow)}
+
+/* ---------- Bandeau de page ---------- */
+.pagehead{padding:54px 0 58px;background:
+  repeating-linear-gradient(-45deg, var(--navy) 0 40px, var(--navy-deep) 40px 44px);color:var(--white)}
+.kicker{color:var(--yellow);font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase}
+.pagehead h1{font-family:'Archivo Black',sans-serif;font-size:clamp(28px,4.6vw,46px);
+  line-height:1.1;margin:14px 0 16px;max-width:780px}
+.pagehead h1 em{font-style:normal;color:var(--yellow)}
+.pagehead p{max-width:640px;color:#C7D0E0;font-size:17px}
+
+/* ---------- Fil d'Ariane ---------- */
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--grey)}
+.breadcrumb a{color:var(--grey);text-decoration:none;font-weight:600}
+.breadcrumb a:hover{color:var(--navy)}
+
+/* ---------- Grille d'articles ---------- */
+.cards{padding:52px 0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:26px}
+.card{background:var(--white);border:2px solid var(--navy);box-shadow:6px 6px 0 var(--yellow);
+  display:flex;flex-direction:column;transition:transform .12s ease, box-shadow .12s ease}
+.card:hover{transform:translate(-2px,-2px);box-shadow:9px 9px 0 var(--yellow)}
+.card .thumb{border-bottom:2px solid var(--navy);background:var(--navy)}
+.card .body{padding:20px;display:flex;flex-direction:column;flex:1}
+.tag{display:inline-block;align-self:flex-start;background:var(--navy);color:var(--yellow);
+  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;margin-bottom:12px}
+.card h2{font-family:'Archivo Black',sans-serif;font-size:19px;line-height:1.25;color:var(--navy);margin-bottom:9px}
+.card h2 a{color:inherit;text-decoration:none}
+.card h2 a:hover{text-decoration:underline;text-decoration-color:var(--yellow);text-decoration-thickness:3px}
+.card p{font-size:14.5px;color:var(--grey);flex:1}
+.card .meta{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--grey);font-weight:600;display:flex;justify-content:space-between}
+
+/* ---------- Corps d'article ---------- */
+article{padding:10px 0 60px}
+.hero-visual{border:2px solid var(--navy);box-shadow:8px 8px 0 var(--yellow);margin:0 0 36px}
+.article-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--grey);font-weight:600;
+  padding-bottom:18px;margin-bottom:30px;border-bottom:2px solid var(--navy)}
+.chapo{font-size:19px;line-height:1.6;color:var(--navy);font-weight:600;margin-bottom:32px;
+  border-left:4px solid var(--yellow);padding-left:18px}
+article h2{font-family:'Archivo Black',sans-serif;font-size:clamp(21px,3vw,27px);color:var(--navy);
+  line-height:1.2;margin:42px 0 16px}
+article h3{font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;color:var(--navy);margin:28px 0 10px}
+article p{margin-bottom:16px;font-size:16.5px}
+article ul,article ol{margin:0 0 20px 0;padding-left:0;list-style:none}
+article ul li{position:relative;padding:7px 0 7px 26px;font-size:16.5px}
+article ul li::before{content:"★";color:var(--yellow);position:absolute;left:0;top:7px}
+article ol{counter-reset:step}
+article ol li{position:relative;padding:7px 0 7px 34px;font-size:16.5px;counter-increment:step}
+article ol li::before{content:counter(step);position:absolute;left:0;top:8px;width:22px;height:22px;
+  background:var(--navy);color:var(--yellow);font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+article a{color:var(--navy);text-decoration:underline;text-decoration-color:var(--yellow);
+  text-decoration-thickness:3px;text-underline-offset:2px;font-weight:600}
+article strong{color:var(--navy)}
+
+/* Sommaire */
+.toc{background:var(--white);border:2px solid var(--navy);padding:22px 24px;margin-bottom:36px}
+.toc h2{font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;letter-spacing:.12em;
+  text-transform:uppercase;margin:0 0 12px;color:var(--navy)}
+.toc ol{margin:0}
+.toc ol li{padding:5px 0 5px 30px;font-size:15px}
+.toc a{text-decoration:none;font-weight:600}
+.toc a:hover{text-decoration:underline}
+
+/* SIGNATURE : le bloc de transformation avis → réponse */
+.transfo{margin:32px 0;border:2px solid var(--navy);background:var(--white)}
+.transfo .t-head{background:var(--navy);color:var(--white);padding:10px 16px;
+  font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.transfo .t-body{padding:20px}
+.avis-box{border-left:4px solid var(--red);background:#FBEAEA;padding:14px 16px;font-size:15.5px;color:#7B241C}
+.avis-box .rate{color:var(--red);letter-spacing:.3em;font-size:13px;margin-bottom:6px;font-weight:700}
+.arrow{text-align:center;margin:16px 0;font-size:13px;font-weight:700;color:var(--navy)}
+.arrow span{background:var(--yellow);padding:4px 12px;display:inline-block}
+.rep-box{border-left:4px solid var(--green);background:#EAF6EF;padding:14px 16px;font-size:15.5px;color:#14532D;white-space:pre-line}
+.rep-box .lbl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+
+/* Encadré conseil */
+.tip{border:2px dashed var(--navy);background:var(--white);padding:18px 20px;margin:28px 0}
+.tip strong{display:block;font-family:'Archivo Black',sans-serif;font-size:14px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-bottom:8px}
+.tip p:last-child{margin-bottom:0}
+
+/* Tableau */
+.tbl{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+.tbl th{background:var(--navy);color:var(--white);text-align:left;padding:11px 13px;font-size:13px;
+  letter-spacing:.06em;text-transform:uppercase}
+.tbl td{border:1px solid var(--line);padding:11px 13px;background:var(--white);vertical-align:top}
+
+/* ---------- Encart de conversion (outil + kit) ---------- */
+.convert{border:2px solid var(--navy);background:var(--navy);color:var(--white);
+  box-shadow:8px 8px 0 var(--yellow);padding:28px;margin:44px 0}
+.convert .kicker{margin-bottom:8px}
+.convert h2{font-family:'Archivo Black',sans-serif;color:var(--white);font-size:23px;margin:0 0 10px;line-height:1.2}
+.convert p{color:#C7D0E0;font-size:15.5px;margin-bottom:18px}
+.convert .btnrow{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;text-decoration:none;font-weight:700;padding:13px 20px;font-size:15px;
+  cursor:pointer;border:2px solid var(--yellow)}
+.btn.solid{background:var(--yellow);color:var(--navy)}
+.btn.solid:hover{background:#FFC526}
+.btn.ghost{color:var(--yellow);background:transparent}
+.btn.ghost:hover{background:var(--yellow);color:var(--navy)}
+article .convert a{text-decoration:none}
+
+/* ---------- FAQ ---------- */
+.faq{margin:40px 0}
+.faq details{border:2px solid var(--navy);background:var(--white);margin-bottom:10px}
+.faq summary{padding:15px 18px;font-weight:700;color:var(--navy);cursor:pointer;font-size:16px;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";float:right;color:var(--yellow);font-family:'Archivo Black',sans-serif}
+.faq details[open] summary::after{content:"–"}
+.faq details[open] summary{border-bottom:1px solid var(--line)}
+.faq .ans{padding:15px 18px;font-size:16px}
+.faq .ans p:last-child{margin-bottom:0}
+
+/* ---------- Articles liés ---------- */
+.related{border-top:2px solid var(--navy);padding-top:30px;margin-top:50px}
+.related h2{font-family:'Archivo Black',sans-serif;font-size:20px;color:var(--navy);margin-bottom:18px}
+.related ul{list-style:none;margin:0}
+.related li{padding:9px 0 9px 26px;position:relative;border-bottom:1px solid var(--line)}
+.related li::before{content:"→";color:var(--yellow);position:absolute;left:0;font-weight:700}
+.related a{color:var(--navy);text-decoration:none;font-weight:600}
+.related a:hover{text-decoration:underline}
+
+/* ---------- Pied de page ---------- */
+footer{background:var(--navy);color:#9FAABF;padding:38px 0;font-size:13px;margin-top:40px}
+footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+footer a{color:#C7D0E0;text-decoration:none}
+footer a:hover{color:var(--yellow)}
+
+@media(max-width:640px){
+  .navlinks{gap:12px}
+  .navlinks a:not(.cta){display:none}
+  .convert{padding:22px}
+}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.card{transition:none}}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}

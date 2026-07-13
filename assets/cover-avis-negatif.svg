@@ -1,0 +1,33 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Répondre à un avis Google négatif">
+  <defs>
+    <pattern id="dg1" width="56" height="56" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+      <rect width="56" height="56" fill="#1B2A4A"/>
+      <rect width="56" height="4" fill="#12203B"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#dg1)"/>
+  <text x="70" y="120" font-family="Archivo Black, Arial Black, sans-serif" font-size="26" fill="#F5B301" letter-spacing="4">ARTISAN 5 ÉTOILES · LE BLOG</text>
+  <text x="70" y="230" font-family="Archivo Black, Arial Black, sans-serif" font-size="72" fill="#FFFFFF">Un avis 1 étoile ?</text>
+  <text x="70" y="315" font-family="Archivo Black, Arial Black, sans-serif" font-size="72" fill="#F5B301">Voici quoi répondre.</text>
+  <!-- carte avis -->
+  <g transform="translate(70,380)">
+    <rect x="0" y="0" width="500" height="170" fill="#FFFFFF" stroke="#C0392B" stroke-width="6"/>
+    <text x="24" y="46" font-family="Arial" font-size="26" fill="#C0392B" letter-spacing="6">★☆☆☆☆</text>
+    <text x="24" y="88" font-family="Archivo, Arial" font-size="21" fill="#7B241C">« Chantier laissé sale et devis</text>
+    <text x="24" y="118" font-family="Archivo, Arial" font-size="21" fill="#7B241C">dépassé de 200 €. Déçu. »</text>
+    <text x="24" y="152" font-family="Archivo, Arial" font-size="15" fill="#9a5b52">Avis client · il y a 2 h</text>
+  </g>
+  <!-- flèche -->
+  <g transform="translate(600,455)">
+    <rect x="0" y="0" width="150" height="44" fill="#F5B301"/>
+    <text x="75" y="30" text-anchor="middle" font-family="Archivo Black, Arial Black" font-size="18" fill="#1B2A4A">10 SEC →</text>
+  </g>
+  <!-- carte réponse -->
+  <g transform="translate(770,380)">
+    <rect x="0" y="0" width="360" height="170" fill="#FFFFFF" stroke="#1E7A46" stroke-width="6"/>
+    <text x="24" y="42" font-family="Archivo Black, Arial Black" font-size="14" fill="#1E7A46" letter-spacing="2">RÉPONSE PRÊTE</text>
+    <text x="24" y="80" font-family="Archivo, Arial" font-size="18" fill="#14532D">« Bonjour, merci de ce retour.</text>
+    <text x="24" y="108" font-family="Archivo, Arial" font-size="18" fill="#14532D">Vous avez raison sur le</text>
+    <text x="24" y="136" font-family="Archivo, Arial" font-size="18" fill="#14532D">nettoyage, appelez-moi… »</text>
+  </g>
+</svg>
