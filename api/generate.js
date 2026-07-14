@@ -1,87 +1,148 @@
 // ============================================================
-// API /api/generate — VERSION SÉCURISÉE
-// Protections ajoutées :
-//   1. CORS restreint (site + extension Chrome uniquement)
-//   2. Limite par IP : 3 générations gratuites AU TOTAL (définitif)
-//   3. Plafond global : 400 générations / jour (protège la facture)
-//   4. Blocage des User-Agents de scripts évidents (curl, python…)
-// Aucune dépendance externe : déployable tel quel sur Vercel.
+// API /api/generate — VERSION AVEC LICENCE GUMROAD
 //
-// IMPORTANT — limite "définitive" et mémoire serverless :
-// Les compteurs sont en mémoire. Vercel redémarre parfois ses
-// instances (cold start), ce qui remet les compteurs à zéro côté
-// serveur. Pour rendre la limite vraiment tenace, ce fichier
-// fonctionne EN TANDEM avec le blocage localStorage ajouté dans
-// index.html (le navigateur du visiteur retient lui-même qu'il a
-// épuisé ses 3 essais, même si le serveur a oublié).
-// Un visiteur très technique peut contourner (navigation privée +
-// cold start), mais c'est marginal. Pour un verrou absolu :
-// Upstash Redis (gratuit) — à faire si le trafic devient important.
+// Deux publics, deux régimes :
+//
+//   • VISITEUR GRATUIT (site web, aucune licence)
+//     → 3 générations AU TOTAL, définitif.
+//
+//   • CLIENT PAYANT (extension avec clé de licence valide)
+//     → 200 générations / jour. C'est "illimité" en pratique
+//       (aucun artisan ne répond à 200 avis par jour), mais ça
+//       borne le risque en cas de clé partagée publiquement.
+//
+// La licence est vérifiée pour de vrai auprès de Gumroad
+// (POST https://api.gumroad.com/v2/licenses/verify).
+// Une clé remboursée / annulée est automatiquement rejetée.
+//
+// Le résultat de vérification est mis en cache 6 h en mémoire
+// pour ne pas appeler Gumroad à chaque génération (latence + quota).
+//
+// PROTECTIONS CONSERVÉES :
+//   - CORS restreint (site + extension uniquement)
+//   - Blocage des User-Agents de scripts (curl, python…)
+//   - Plafond global journalier = filet de sécurité facture
+//
+// VARIABLES D'ENVIRONNEMENT REQUISES (Vercel) :
+//   ANTHROPIC_API_KEY   (déjà configurée)
+//   GUMROAD_PRODUCT_ID  (à ajouter — voir GUIDE-LICENCE.md)
 // ============================================================
 
 // ---------- Configuration ----------
-const LIMITE_PAR_IP = 5; // Plafond serveur DÉFINITIF : 3 gratuites + 2 débloquées par partage.
-                         // Le client (index.html) gère la logique 3 puis +2 ; ce chiffre
-                         // est le mur de sécurité côté serveur, jamais remis à zéro.
-const PLAFOND_GLOBAL_JOUR = 400;      // générations max/jour toutes IP confondues
-                                      // (400 × ~0,002€ ≈ moins de 1€/jour de risque max)
+const LIMITE_GRATUIT = 3;          // visiteur web : 3 générations, DÉFINITIF
+const LIMITE_CLIENT_JOUR = 200;    // client licencié : par jour, par clé
+const PLAFOND_GLOBAL_JOUR = 1000;  // toutes sources confondues
+                                   // (~1 $/jour ≈ 30 $/mois de risque max absolu)
+
+const CACHE_LICENCE_MS = 6 * 60 * 60 * 1000; // revérifier une clé toutes les 6 h
 
 const ORIGINES_AUTORISEES = [
   "https://artisan5etoiles.fr",
   "https://www.artisan5etoiles.fr",
 ];
 
-// ---------- Compteurs en mémoire ----------
-const compteurIP = new Map(); // ip -> nombre total de générations (jamais remis à zéro)
+// ---------- Compteurs & cache en mémoire ----------
+const compteurGratuit = new Map();   // ip -> total (jamais remis à zéro)
+const compteurLicence = new Map();   // clé -> { count, jour }
+const cacheLicence = new Map();      // clé -> { valide, expire }
 let compteurGlobal = { count: 0, jour: "" };
 
 function jourActuel() {
-  return new Date().toISOString().slice(0, 10); // "2026-07-13"
+  return new Date().toISOString().slice(0, 10);
 }
 
-function verifierRateLimitIP(ip) {
-  const count = compteurIP.get(ip) || 0;
+function verifierQuotaGratuit(ip) {
+  const count = compteurGratuit.get(ip) || 0;
+  if (count >= LIMITE_GRATUIT) return false;
+  compteurGratuit.set(ip, count + 1);
+  return true;
+}
 
-  if (count >= LIMITE_PAR_IP) {
-    return { ok: false };
+function verifierQuotaLicence(cle) {
+  const jour = jourActuel();
+  const info = compteurLicence.get(cle);
+  if (!info || info.jour !== jour) {
+    compteurLicence.set(cle, { count: 1, jour });
+    return true;
   }
-
-  compteurIP.set(ip, count + 1);
-  return { ok: true };
+  if (info.count >= LIMITE_CLIENT_JOUR) return false;
+  info.count++;
+  return true;
 }
 
 function verifierPlafondGlobal() {
   const jour = jourActuel();
-  if (compteurGlobal.jour !== jour) {
-    compteurGlobal = { count: 0, jour };
-  }
+  if (compteurGlobal.jour !== jour) compteurGlobal = { count: 0, jour };
   if (compteurGlobal.count >= PLAFOND_GLOBAL_JOUR) return false;
   compteurGlobal.count++;
   return true;
 }
 
+// ---------- Vérification de licence auprès de Gumroad ----------
+async function licenceValide(cle) {
+  const maintenant = Date.now();
+
+  // Cache : évite d'appeler Gumroad à chaque génération
+  const cache = cacheLicence.get(cle);
+  if (cache && cache.expire > maintenant) {
+    return cache.valide;
+  }
+
+  const productId = process.env.GUMROAD_PRODUCT_ID;
+  if (!productId) {
+    console.error("GUMROAD_PRODUCT_ID non configuré dans Vercel");
+    return false;
+  }
+
+  try {
+    const body = new URLSearchParams();
+    body.append("product_id", productId);
+    body.append("license_key", cle);
+    // increment_uses_count = false : on ne gonfle pas le compteur Gumroad
+    // à chaque génération. On gère nos propres quotas ici.
+    body.append("increment_uses_count", "false");
+
+    const r = await fetch("https://api.gumroad.com/v2/licenses/verify", {
+      method: "POST",
+      body,
+    });
+    const data = await r.json();
+
+    const achat = data.purchase || {};
+    const valide =
+      r.ok &&
+      data.success === true &&
+      !achat.refunded &&
+      !achat.chargebacked &&
+      !achat.disputed;
+
+    cacheLicence.set(cle, { valide, expire: maintenant + CACHE_LICENCE_MS });
+    return valide;
+  } catch (e) {
+    console.error("Erreur vérification Gumroad:", e);
+    // Panne Gumroad : on ne punit pas un client déjà vérifié récemment,
+    // mais on n'accorde rien à une clé jamais vue.
+    return cache ? cache.valide : false;
+  }
+}
+
 function origineAutorisee(origin) {
   if (!origin) return false;
   if (ORIGINES_AUTORISEES.includes(origin)) return true;
-  // L'extension Chrome envoie une origine du type chrome-extension://<id>
   if (origin.startsWith("chrome-extension://")) return true;
   return false;
 }
 
 function extraireIP(req) {
-  // Vercel place l'IP réelle du visiteur dans x-forwarded-for (première valeur)
   const xff = req.headers["x-forwarded-for"];
-  if (typeof xff === "string" && xff.length > 0) {
-    return xff.split(",")[0].trim();
-  }
+  if (typeof xff === "string" && xff.length > 0) return xff.split(",")[0].trim();
   return req.socket?.remoteAddress || "ip-inconnue";
 }
 
-// ---------- Handler principal ----------
+// ---------- Handler ----------
 export default async function handler(req, res) {
   const origin = req.headers.origin || "";
 
-  // --- CORS : uniquement le site et l'extension, plus jamais "*" ---
   if (origineAutorisee(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
@@ -89,46 +150,59 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Méthode non autorisée" });
 
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Méthode non autorisée" });
-  }
-
-  // --- Refus des appels hors site/extension ---
-  // (Un navigateur envoie toujours l'en-tête Origin sur un fetch POST cross-context.
-  //  Les scripts curl/python ne l'envoient pas → bloqués ici.)
   if (!origineAutorisee(origin)) {
     return res.status(403).json({ error: "Accès non autorisé" });
   }
 
-  // --- Blocage des user-agents de scripts évidents ---
   const ua = (req.headers["user-agent"] || "").toLowerCase();
   if (!ua || /curl|wget|python|httpie|postman|go-http|node-fetch|axios/.test(ua)) {
     return res.status(403).json({ error: "Accès non autorisé" });
   }
 
-  // --- Plafond global journalier (protège la facture API) ---
+  // Filet de sécurité facture, appliqué à tout le monde
   if (!verifierPlafondGlobal()) {
     return res.status(429).json({
-      error: "L'outil a atteint sa capacité du jour. Revenez demain, ou découvrez le Système complet.",
+      error: "Le service a atteint sa capacité du jour. Réessayez demain.",
     });
   }
 
-  // --- Limite définitive par IP : 3 générations gratuites, point final ---
-  const ip = extraireIP(req);
-  const rl = verifierRateLimitIP(ip);
-  if (!rl.ok) {
-    return res.status(429).json({
-      error: `Vous avez utilisé toutes vos générations gratuites. Pour continuer en illimité, obtenez le Système complet (extension Chrome + 50 modèles) pour 29 €.`,
-    });
+  const { avis, metier, ville, ton, licence } = req.body || {};
+
+  // ---- Quota : licence valide → généreux ; sinon → gratuit limité ----
+  const cle = typeof licence === "string" ? licence.trim() : "";
+  let estClient = false;
+
+  if (cle.length >= 8) {
+    estClient = await licenceValide(cle);
+
+    if (!estClient) {
+      // Une clé a été fournie mais elle est rejetée : on le dit clairement
+      return res.status(403).json({
+        error:
+          "Licence invalide ou expirée. Vérifiez la clé reçue par e-mail après votre achat.",
+      });
+    }
+
+    if (!verifierQuotaLicence(cle)) {
+      return res.status(429).json({
+        error:
+          "Limite quotidienne atteinte pour cette licence. Réessayez demain, ou écrivez à contact@artisan5etoiles.fr.",
+      });
+    }
+  } else {
+    // Aucun clé : régime gratuit
+    const ip = extraireIP(req);
+    if (!verifierQuotaGratuit(ip)) {
+      return res.status(429).json({
+        error: `Vous avez utilisé vos ${LIMITE_GRATUIT} générations gratuites. Pour un usage illimité, obtenez le Système complet (extension Chrome + 50 modèles) pour 29 €.`,
+      });
+    }
   }
 
-  // --- Validation des entrées (inchangée, avec bornes) ---
-  const { avis, metier, ville, ton } = req.body || {};
-
+  // ---- Validation des entrées ----
   if (!avis || typeof avis !== "string" || avis.trim().length < 10) {
     return res.status(400).json({ error: "Avis manquant ou trop court" });
   }
