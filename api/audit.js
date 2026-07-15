@@ -231,12 +231,12 @@ Voici les données réelles de la fiche Google Business d'un artisan :
 
 Nom : ${fiche.displayName?.text || "?"}
 Métier déclaré : ${metier || "artisan"}
-Note : ${fiche.rating || "aucune"} (${fiche.userRatingCount || 0} avis)
+Note Google (sur 5) : ${fiche.rating || "aucune"} (${fiche.userRatingCount || 0} avis)
 Photos : ${(fiche.photos || []).length}${(fiche.photos || []).length >= 10 ? " ou plus" : ""}
 Site web : ${fiche.websiteUri ? "renseigné" : "absent"}
 Horaires : ${fiche.regularOpeningHours ? "renseignés" : "absents"}
 Répond aux avis : ${repondAvis === "toujours" ? "systématiquement" : repondAvis === "parfois" ? "parfois" : "jamais"}
-Score calculé : ${score.total}/100
+Score global calculé (sur 100, différent de la note Google) : ${score.total}/100
 
 Derniers avis (max 5) :
 ${avis.length ? avis.map(a => `- ${a.note}★ (${a.date}) : "${a.texte}"`).join("\n") : "aucun avis textuel"}
@@ -252,7 +252,7 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans backticks, sans texte autour
   "exempleReponse": ${avisCible ? `"une réponse professionnelle, chaleureuse et concrète à l'avis cité en exemple, signée du nom de l'entreprise, 3 à 5 phrases, en français"` : "null"}
 }
 
-Règles pour "priorites" : 3 à 4 actions maximum, classées par impact, adaptées aux données réelles ci-dessus (ne recommande pas d'ajouter des photos s'il y en a déjà 10). Si l'artisan ne répond pas ou peu aux avis, la réponse aux avis doit être la priorité n°1.`;
+Règles pour "priorites" : 3 à 4 actions maximum, classées par impact, adaptées aux données réelles ci-dessus (ne recommande pas d'ajouter des photos s'il y en a déjà 10). Si l'artisan ne répond pas ou peu aux avis, la réponse aux avis doit être la priorité n°1. Dans "diagnostic", si tu mentionnes la note, précise bien "X/5" (note Google) et ne la confonds jamais avec le score global qui est sur 100.`;
 
   try {
     const r = await fetch("https://api.anthropic.com/v1/messages", {
