@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit gratuit de votre fiche Google — Artisan 5 Étoiles</title>
+<meta name="description" content="Entrez le nom de votre entreprise et découvrez en 30 secondes la note de votre fiche Google sur 100, avec un plan d'action personnalisé. Gratuit, conçu pour les artisans.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
+
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '3230732657316523');
+fbq('track', 'PageView');
+</script>
+
+<style>
+  :root{
+    --navy:#1B2A4A; --navy-deep:#12203B; --yellow:#F5B301; --paper:#F6F4EF;
+    --ink:#22262B; --grey:#5C6470; --line:#DCD8CF; --white:#FFFFFF;
+    --rouge:#C0392B; --vert:#2E7D32;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Archivo',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px}
+
+  header{background:var(--navy);color:var(--white)}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+  .logo{font-family:'Archivo Black',sans-serif;font-size:17px;letter-spacing:.02em}
+  .logo span{color:var(--yellow)}
+  .logo a{color:inherit;text-decoration:none}
+  .nav a.cta{background:var(--yellow);color:var(--navy);text-decoration:none;font-weight:700;
+    padding:9px 16px;font-size:14px;border:2px solid var(--yellow)}
+  .nav a.cta:hover{background:transparent;color:var(--yellow)}
+
+  .hero{padding:52px 0 60px;background:
+    repeating-linear-gradient(-45deg, var(--navy) 0 40px, var(--navy-deep) 40px 44px)}
+  .hero .wrap{color:var(--white);text-align:center}
+  .kicker{color:var(--yellow);font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase}
+  h1{font-family:'Archivo Black',sans-serif;font-size:clamp(26px,4.6vw,44px);line-height:1.1;margin:14px auto 16px;max-width:700px}
+  h1 em{font-style:normal;color:var(--yellow)}
+  .hero p{max-width:560px;margin:0 auto;color:#C7D0E0;font-size:16.5px}
+
+  main{padding:56px 0 70px}
+  .card{background:var(--white);border:2px solid var(--navy);box-shadow:8px 8px 0 var(--yellow);padding:30px;margin-bottom:28px}
+  h2{font-family:'Archivo Black',sans-serif;font-size:clamp(20px,3vw,26px);color:var(--navy);line-height:1.15;margin-bottom:6px}
+  .sub{color:var(--grey);font-size:14.5px;margin-bottom:18px}
+  label{display:block;font-weight:700;font-size:13px;color:var(--navy);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 6px}
+  input,select{width:100%;font-family:inherit;font-size:15px;padding:12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink)}
+  input:focus,select:focus{outline:2px solid var(--yellow);border-color:var(--navy)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}}
+  .bigbtn{margin-top:22px;width:100%;background:var(--navy);color:var(--white);border:2px solid var(--navy);
+    font-family:'Archivo Black',sans-serif;font-size:16px;padding:16px;cursor:pointer;letter-spacing:.03em}
+  .bigbtn:hover:not(:disabled){background:var(--yellow);color:var(--navy)}
+  .bigbtn:disabled{opacity:.55;cursor:wait}
+  .err{display:none;margin-top:16px;background:#FBEAEA;border-left:4px solid var(--rouge);padding:12px 16px;font-size:14px;color:#7B241C}
+  .err.show{display:block}
+  .hidden{display:none}
+
+  /* Choix de la fiche */
+  .candidat{border:2px solid var(--line);background:var(--paper);padding:16px;margin-top:12px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center}
+  .candidat:hover{border-color:var(--navy)}
+  .candidat strong{color:var(--navy);font-size:15.5px}
+  .candidat span{color:var(--grey);font-size:13.5px;display:block;margin-top:2px}
+  .candidat .go{color:var(--yellow);font-weight:800;font-size:20px;flex-shrink:0}
+
+  /* Formulaire audit */
+  .rgpd{display:flex;gap:9px;align-items:flex-start;margin-top:14px;font-size:12.5px;color:var(--grey);line-height:1.45}
+  .rgpd input{width:auto;margin-top:2px;flex-shrink:0}
+  .fiche-choisie{background:var(--paper);border-left:4px solid var(--yellow);padding:12px 16px;font-size:14.5px;margin-bottom:6px}
+  .fiche-choisie b{color:var(--navy)}
+  .changer{background:none;border:none;color:var(--grey);font-size:12.5px;text-decoration:underline;cursor:pointer;font-family:inherit;padding:0;margin-top:4px}
+
+  /* Chargement */
+  .loading{text-align:center;padding:40px 20px}
+  .loading .dots{font-family:'Archivo Black',sans-serif;font-size:22px;color:var(--navy)}
+  .loading p{color:var(--grey);font-size:14.5px;margin-top:10px}
+
+  /* Rapport */
+  .score-hero{text-align:center;padding:8px 0 22px}
+  .score-cercle{width:160px;height:160px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;
+    font-family:'Archivo Black',sans-serif;font-size:44px;color:var(--navy);position:relative;background:
+    conic-gradient(var(--yellow) calc(var(--pct) * 1%), var(--line) 0)}
+  .score-cercle::before{content:"";position:absolute;inset:12px;border-radius:50%;background:var(--white)}
+  .score-cercle b{position:relative;z-index:1}
+  .score-cercle small{position:relative;z-index:1;font-size:16px;color:var(--grey);font-family:'Archivo',sans-serif;font-weight:600;margin-left:2px}
+  .score-titre{font-family:'Archivo Black',sans-serif;font-size:19px;color:var(--navy)}
+  .score-sous{color:var(--grey);font-size:14px;margin-top:4px}
+
+  table.criteres{width:100%;border-collapse:collapse;margin-top:16px;font-size:14.5px}
+  table.criteres td{padding:10px 8px;border-bottom:1px solid var(--line)}
+  table.criteres td:first-child{font-weight:600;color:var(--navy)}
+  table.criteres td:nth-child(2){color:var(--grey)}
+  table.criteres td:last-child{text-align:right;font-weight:700;white-space:nowrap}
+  .pts-bon{color:var(--vert)} .pts-moyen{color:#B8860B} .pts-faible{color:var(--rouge)}
+
+  .diagnostic{border-left:4px solid var(--yellow);background:var(--paper);padding:16px 18px;font-size:15.5px;margin-top:8px}
+
+  .prio{border:2px solid var(--line);padding:16px 18px;margin-top:12px;background:var(--white)}
+  .prio h3{font-family:'Archivo Black',sans-serif;font-size:15.5px;color:var(--navy);margin-bottom:5px}
+  .prio h3 .num{color:var(--yellow);margin-right:6px}
+  .prio p{font-size:14.5px;color:var(--ink)}
+
+  .exemple{background:var(--paper);border:2px solid var(--navy);padding:18px;margin-top:8px}
+  .exemple .avis-orig{font-size:13.5px;color:var(--grey);font-style:italic;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}
+  .exemple .reponse{white-space:pre-wrap;font-size:15px}
+  .copybtn{margin-top:14px;background:var(--white);border:1.5px solid var(--navy);color:var(--navy);
+    font-weight:700;padding:9px 16px;font-size:13px;cursor:pointer}
+  .copybtn:hover{background:var(--navy);color:var(--white)}
+
+  .cta-kit{background:var(--navy);color:var(--white);padding:28px;text-align:center;border:2px solid var(--navy);box-shadow:8px 8px 0 var(--yellow);margin-top:28px}
+  .cta-kit h2{color:var(--white)}
+  .cta-kit p{color:#C7D0E0;font-size:15px;max-width:520px;margin:10px auto 18px}
+  .cta-kit a{display:inline-block;background:var(--yellow);color:var(--navy);font-weight:800;
+    text-decoration:none;padding:15px 26px;font-size:16px;border:2px solid var(--yellow)}
+  .cta-kit a:hover{background:transparent;color:var(--yellow)}
+  .cta-kit small{display:block;margin-top:10px;color:#8E9BB5}
+
+  footer{padding:34px 0;color:var(--grey);font-size:13px}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo"><a href="/">ARTISAN <span>5 ÉTOILES</span></a></div>
+    <a class="cta" href="/#kit">Le Système complet — 29&nbsp;€</a>
+  </div>
+  <div class="hero">
+    <div class="wrap">
+      <div class="kicker">Audit gratuit · Résultat en 30 secondes</div>
+      <h1>Quelle note mérite <em>votre fiche Google</em>&nbsp;?</h1>
+      <p>Entrez le nom de votre entreprise. On analyse votre fiche Google Business et on vous donne
+      votre score sur 100, avec un plan d'action personnalisé pour gagner plus de clients.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- ÉTAPE 1 : recherche -->
+    <div class="card" id="etape-recherche">
+      <h2>Trouvez votre fiche</h2>
+      <p class="sub">Le nom exact tel qu'il apparaît sur Google (celui de votre fiche Google Business).</p>
+      <div class="grid2">
+        <div>
+          <label for="entreprise">Nom de votre entreprise</label>
+          <input id="entreprise" placeholder="Exemple : Plomberie Dupont">
+        </div>
+        <div>
+          <label for="ville">Votre ville</label>
+          <input id="ville" placeholder="Exemple : Dunkerque">
+        </div>
+      </div>
+      <button class="bigbtn" id="btn-recherche" type="button">TROUVER MA FICHE</button>
+      <div class="err" id="err-recherche"></div>
+    </div>
+
+    <!-- ÉTAPE 2 : choix du candidat -->
+    <div class="card hidden" id="etape-choix">
+      <h2>C'est bien vous ?</h2>
+      <p class="sub">Cliquez sur votre fiche pour lancer l'audit.</p>
+      <div id="liste-candidats"></div>
+      <button class="changer" id="btn-rechercher-encore" type="button">← Ce n'est pas la bonne entreprise, modifier ma recherche</button>
+    </div>
+
+    <!-- ÉTAPE 3 : infos + e-mail -->
+    <div class="card hidden" id="etape-infos">
+      <h2>Dernière étape avant votre audit</h2>
+      <div class="fiche-choisie" id="fiche-choisie"></div>
+      <button class="changer" id="btn-changer-fiche" type="button">← Changer de fiche</button>
+
+      <div class="grid2">
+        <div>
+          <label for="metier">Votre métier</label>
+          <select id="metier">
+            <option>Plombier / Chauffagiste</option>
+            <option>Électricien</option>
+            <option>Peintre / Plaquiste</option>
+            <option>Menuisier</option>
+            <option>Maçon / Carreleur</option>
+            <option>Couvreur</option>
+            <option>Paysagiste / Jardinier</option>
+            <option>Garagiste</option>
+            <option>Coiffeur / Institut</option>
+            <option>Autre artisan / commerce</option>
+          </select>
+        </div>
+        <div>
+          <label for="repond">Répondez-vous à vos avis Google ?</label>
+          <select id="repond">
+            <option value="jamais">Non, jamais ou presque</option>
+            <option value="parfois">Parfois, quand j'ai le temps</option>
+            <option value="toujours">Oui, systématiquement</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="mail">Votre e-mail (pour recevoir le rapport)</label>
+      <input id="mail" type="email" placeholder="jean.dupont@exemple.fr" autocomplete="email">
+
+      <label class="rgpd">
+        <input type="checkbox" id="consent">
+        <span>J'accepte de recevoir mon audit et occasionnellement des conseils sur les avis Google. Désinscription en un clic à tout moment.</span>
+      </label>
+
+      <button class="bigbtn" id="btn-audit" type="button">LANCER MON AUDIT GRATUIT</button>
+      <div class="err" id="err-audit"></div>
+    </div>
+
+    <!-- Chargement -->
+    <div class="card hidden" id="etape-chargement">
+      <div class="loading">
+        <div class="dots">Analyse de votre fiche…</div>
+        <p>Récupération des données Google, calcul du score, rédaction de vos recommandations. Environ 15 secondes.</p>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 4 : rapport -->
+    <div id="rapport" class="hidden">
+      <div class="card">
+        <div class="score-hero">
+          <div class="score-cercle" id="score-cercle" style="--pct:0"><b id="score-val">0</b><small>/100</small></div>
+          <div class="score-titre" id="score-titre"></div>
+          <div class="score-sous" id="score-nom"></div>
+        </div>
+        <table class="criteres" id="table-criteres"></table>
+      </div>
+
+      <div class="card">
+        <h2>Le diagnostic</h2>
+        <div class="diagnostic" id="diag-texte"></div>
+      </div>
+
+      <div class="card">
+        <h2>Vos priorités</h2>
+        <p class="sub">Les actions classées par impact, adaptées à votre fiche.</p>
+        <div id="liste-prios"></div>
+      </div>
+
+      <div class="card hidden" id="card-exemple">
+        <h2>Exemple concret : la réponse à l'un de vos vrais avis</h2>
+        <p class="sub">Rédigée par notre outil. C'est exactement ce que fait le générateur, en 10 secondes par avis.</p>
+        <div class="exemple">
+          <div class="avis-orig" id="exemple-avis"></div>
+          <div class="reponse" id="exemple-reponse"></div>
+          <button class="copybtn" id="btn-copier" type="button">Copier la réponse</button>
+        </div>
+      </div>
+
+      <div class="cta-kit">
+        <h2>Passez à l'action dès aujourd'hui</h2>
+        <p>Le Système Artisan 5 Étoiles : l'extension Chrome qui répond à vos avis directement depuis votre
+        fiche Google, + la méthode complète pour collecter plus d'avis et verrouiller votre réputation.</p>
+        <a href="https://labspire.gumroad.com/l/rpftob" id="cta-buy">OBTENIR LE SYSTÈME — 29&nbsp;€</a>
+        <small>Paiement unique · Garantie satisfait ou remboursé 14 jours</small>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Artisan 5 Étoiles</div>
+    <div>Contact : contact@artisan5etoiles.fr · <a href="/mentions-legales.html" style="color:inherit">Mentions légales</a></div>
+  </div>
+</footer>
+
+<script>
+  const $ = id => document.getElementById(id);
+  let candidats = [], ficheChoisie = null;
+
+  function montrer(id) { $(id).classList.remove("hidden"); }
+  function cacher(id) { $(id).classList.add("hidden"); }
+  function erreur(id, msg) { const e = $(id); e.textContent = msg; e.classList.add("show"); }
+  function effacerErreur(id) { $(id).classList.remove("show"); }
+
+  // Construction DOM sécurisée : les données externes (Google, Claude) passent
+  // toujours par textContent, jamais par innerHTML.
+  function el(tag, className, texte) {
+    const n = document.createElement(tag);
+    if (className) n.className = className;
+    if (texte !== undefined) n.textContent = texte;
+    return n;
+  }
+
+  // ---- Étape 1 : recherche ----
+  async function lancerRecherche() {
+    effacerErreur("err-recherche");
+    const entreprise = $("entreprise").value.trim();
+    const ville = $("ville").value.trim();
+    if (entreprise.length < 2 || ville.length < 2) {
+      return erreur("err-recherche", "Indiquez le nom de votre entreprise et votre ville.");
+    }
+    const btn = $("btn-recherche");
+    btn.disabled = true; btn.textContent = "RECHERCHE EN COURS…";
+    try {
+      const r = await fetch("/api/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "search", entreprise, ville })
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || "Erreur");
+      candidats = data.candidats;
+
+      const liste = $("liste-candidats");
+      liste.textContent = "";
+      candidats.forEach((c, i) => {
+        const div = el("div", "candidat");
+        const infos = el("div");
+        infos.appendChild(el("strong", "", c.nom));
+        infos.appendChild(el("span", "", c.adresse));
+        div.appendChild(infos);
+        div.appendChild(el("div", "go", "→"));
+        div.addEventListener("click", () => choisirFiche(i));
+        liste.appendChild(div);
+      });
+      cacher("etape-recherche"); montrer("etape-choix");
+    } catch (e) {
+      erreur("err-recherche", e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = "TROUVER MA FICHE";
+    }
+  }
+  $("btn-recherche").addEventListener("click", lancerRecherche);
+  // Touche Entrée dans les champs de recherche
+  ["entreprise", "ville"].forEach(id => {
+    $(id).addEventListener("keydown", e => { if (e.key === "Enter") lancerRecherche(); });
+  });
+
+  function choisirFiche(i) {
+    ficheChoisie = candidats[i];
+    const f = $("fiche-choisie");
+    f.textContent = "";
+    f.appendChild(el("b", "", ficheChoisie.nom));
+    f.appendChild(document.createElement("br"));
+    f.appendChild(document.createTextNode(ficheChoisie.adresse));
+    cacher("etape-choix"); montrer("etape-infos");
+    window.scrollTo({ top: $("etape-infos").offsetTop - 20, behavior: "smooth" });
+  }
+
+  $("btn-rechercher-encore").addEventListener("click", () => {
+    cacher("etape-choix"); montrer("etape-recherche");
+  });
+  $("btn-changer-fiche").addEventListener("click", () => {
+    cacher("etape-infos"); montrer("etape-choix");
+  });
+
+  // ---- Étape 3 : lancer l'audit ----
+  $("btn-audit").addEventListener("click", async () => {
+    effacerErreur("err-audit");
+    const email = $("mail").value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      return erreur("err-audit", "Merci d'entrer une adresse e-mail valide.");
+    }
+    if (!$("consent").checked) {
+      return erreur("err-audit", "Merci de cocher la case pour recevoir votre audit.");
+    }
+    cacher("etape-infos"); montrer("etape-chargement");
+    try {
+      const r = await fetch("/api/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "analyze",
+          placeId: ficheChoisie.placeId,
+          repondAvis: $("repond").value,
+          metier: $("metier").value,
+          email
+        })
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || "Erreur");
+      if (typeof fbq === "function") fbq("track", "Lead");
+      afficherRapport(data);
+    } catch (e) {
+      cacher("etape-chargement"); montrer("etape-infos");
+      erreur("err-audit", e.message);
+    }
+  });
+
+  // ---- Étape 4 : affichage du rapport ----
+  function afficherRapport(data) {
+    cacher("etape-chargement");
+
+    const s = data.score.total;
+    $("score-val").textContent = s;
+    $("score-cercle").style.setProperty("--pct", s);
+    $("score-nom").textContent = data.fiche.nom + " — " + data.fiche.adresse;
+    $("score-titre").textContent =
+      s >= 80 ? "Très bonne fiche — verrouillez votre avance" :
+      s >= 60 ? "Fiche correcte — un vrai potentiel inexploité" :
+      s >= 40 ? "Fiche fragile — vous perdez des clients" :
+                "Fiche en danger — vos concurrents en profitent";
+
+    const table = $("table-criteres");
+    table.textContent = "";
+    data.score.details.forEach(d => {
+      const ratio = d.points / d.max;
+      const cls = ratio >= 0.7 ? "pts-bon" : ratio >= 0.4 ? "pts-moyen" : "pts-faible";
+      const tr = document.createElement("tr");
+      tr.appendChild(el("td", "", d.critere));
+      tr.appendChild(el("td", "", d.valeur));
+      tr.appendChild(el("td", cls, d.points + "/" + d.max));
+      table.appendChild(tr);
+    });
+
+    $("diag-texte").textContent = data.rapport.diagnostic || "";
+
+    const prios = $("liste-prios");
+    prios.textContent = "";
+    (data.rapport.priorites || []).forEach((p, i) => {
+      const div = el("div", "prio");
+      const h3 = el("h3");
+      h3.appendChild(el("span", "num", (i + 1) + "."));
+      h3.appendChild(document.createTextNode(p.titre || ""));
+      div.appendChild(h3);
+      div.appendChild(el("p", "", p.detail || ""));
+      prios.appendChild(div);
+    });
+
+    if (data.rapport.exempleReponse) {
+      $("exemple-reponse").textContent = data.rapport.exempleReponse;
+      $("exemple-avis").textContent = "Réponse proposée pour l'un de vos avis récents :";
+      montrer("card-exemple");
+    }
+
+    montrer("rapport");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  $("btn-copier").addEventListener("click", async () => {
+    await navigator.clipboard.writeText($("exemple-reponse").textContent);
+    const b = $("btn-copier");
+    b.textContent = "Copié ✓"; setTimeout(() => b.textContent = "Copier la réponse", 1600);
+  });
+
+  // Tracking clic achat depuis le rapport
+  $("cta-buy").addEventListener("click", () => {
+    if (typeof fbq === "function") fbq("track", "InitiateCheckout");
+  });
+</script>
+</body>
+</html>
