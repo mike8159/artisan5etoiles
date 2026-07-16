@@ -1,6 +1,7 @@
 {
   "functions": {
-    "api/generate.js": { "maxDuration": 15 }
+    "api/generate.js": { "maxDuration": 15 },
+    "api/audit.js": { "maxDuration": 25 }
   },
   "crons": [
     { "path": "/api/sentinel-check", "schedule": "0 9 * * *" }

@@ -20,9 +20,14 @@ const ORIGINES_AUTORISEES = [
   "https://www.artisan5etoiles.fr",
 ];
 
-// Anti-spam : limite par IP
-const LIMITE_PAR_IP = 3;
-const compteurIP = new Map();
+// Anti-spam : limite par IP et par JOUR (remise à zéro quotidienne —
+// sinon un artisan légitime pouvait rester bloqué tant que l'instance vivait)
+const LIMITE_PAR_IP_JOUR = 3;
+const compteurIP = new Map(); // ip -> { jour, count }
+
+function jourActuel() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 function origineAutorisee(origin) {
   if (!origin) return false;
@@ -63,13 +68,15 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: "Accès non autorisé" });
   }
 
-  // Anti-spam basique par IP
+  // Anti-spam basique par IP (quotidien)
   const ip = extraireIP(req);
-  const n = compteurIP.get(ip) || 0;
-  if (n >= LIMITE_PAR_IP) {
-    return res.status(429).json({ error: "Trop de tentatives. Réessayez plus tard." });
+  const jour = jourActuel();
+  const rec = compteurIP.get(ip);
+  if (rec && rec.jour === jour && rec.count >= LIMITE_PAR_IP_JOUR) {
+    return res.status(429).json({ error: "Trop de tentatives aujourd'hui. Réessayez demain." });
   }
-  compteurIP.set(ip, n + 1);
+  if (rec && rec.jour === jour) rec.count += 1;
+  else compteurIP.set(ip, { jour, count: 1 });
 
   const { email, metier, consentement } = req.body || {};
 
@@ -109,15 +116,20 @@ export default async function handler(req, res) {
       }),
     });
 
-    // Brevo renvoie 400 "duplicate_parameter" si le contact existe :
-    // ce n'est pas une erreur pour l'utilisateur.
+    // Brevo renvoie 400 "duplicate_parameter" si le contact existe déjà :
+    // ce cas précis n'est pas une erreur pour l'utilisateur.
+    // (Avant : TOUT code 400 était traité comme un succès — une adresse
+    // réellement refusée par Brevo passait pour inscrite. Corrigé.)
     if (!r.ok) {
       const detail = await r.text();
-      if (detail.includes("duplicate") || r.status === 400) {
+      if (detail.includes("duplicate")) {
         console.log("Contact déjà existant ou déjà inscrit:", email);
         return res.status(200).json({ ok: true, mode: "existant" });
       }
       console.error("Brevo error:", r.status, detail);
+      if (r.status === 400) {
+        return res.status(400).json({ error: "Cette adresse e-mail est refusée. Vérifiez-la ou essayez-en une autre." });
+      }
       return res.status(502).json({ error: "Inscription temporairement indisponible." });
     }
 

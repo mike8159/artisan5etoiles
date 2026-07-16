@@ -354,9 +354,10 @@ export default async function handler(req, res) {
             : "Le service d'audit est très demandé aujourd'hui. Revenez demain !"
         });
       }
-      consommerQuota(searchIp, searchGlobal, ip);
-
+      // Quota consommé APRÈS le succès de l'appel Google (même logique que
+      // pour "analyze") : une panne Google ne coûte pas son quota au visiteur.
       const candidats = await rechercherFiche(entreprise, ville);
+      consommerQuota(searchIp, searchGlobal, ip);
       if (!candidats.length) {
         return res.status(404).json({ error: "Aucune fiche Google trouvée. Vérifiez l'orthographe du nom et de la ville." });
       }

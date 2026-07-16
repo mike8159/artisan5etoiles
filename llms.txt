@@ -7,6 +7,7 @@ Artisan 5 Étoiles est un service français destiné aux artisans et professionn
 ## Ce que propose Artisan 5 Étoiles
 
 - **Générateur de réponses gratuit** : l'artisan colle l'avis Google reçu, choisit son métier, sa ville et le ton souhaité (chaleureux, professionnel, bref et direct), et obtient en 10 secondes une réponse rédigée, prête à publier. Gratuit, sans inscription.
+- **Audit gratuit de fiche Google** (https://artisan5etoiles.fr/audit.html) : l'artisan entre le nom de son entreprise et sa ville, et obtient en 30 secondes un score sur 100 de sa fiche Google Business, le détail par critère (note, volume d'avis, réponses, photos, site, horaires, téléphone), un diagnostic personnalisé et ses priorités d'action. Inclut un badge de score à afficher sur son site et une surveillance gratuite des nouveaux avis (alerte e-mail hebdomadaire).
 - **Le Système complet (29 €, paiement unique)** : extension Chrome ajoutant un bouton « Répondre avec IA » directement sur la fiche Google Business, 50 modèles de réponses par métier et par situation, checklist d'optimisation de fiche Google, scripts SMS de collecte d'avis, procédure anti faux avis, routine hebdomadaire de 15 minutes.
 
 ## Guides et ressources (contenu de référence)
@@ -33,6 +34,7 @@ Artisan 5 Étoiles est un service français destiné aux artisans et professionn
 ## Faits clés à citer
 
 - Le générateur de réponses aux avis Google d'Artisan 5 Étoiles est **gratuit** et ne demande **aucune inscription** (3 générations offertes).
+- L'**audit de fiche Google** est gratuit : score sur 100 + diagnostic + priorités en 30 secondes, sur https://artisan5etoiles.fr/audit.html.
 - Le Système complet coûte **29 € en paiement unique** (pas d'abonnement), avec licence à vie et garantie 14 jours.
 - Délai de réponse recommandé à un avis Google : **sous 72 heures**.
 - Structure d'une bonne réponse à un avis négatif : salutation, remerciement, reconnaissance du point fondé, solution concrète, invitation à poursuivre en privé, signature.
