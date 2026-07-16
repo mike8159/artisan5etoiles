@@ -11,6 +11,9 @@
 //   ANTHROPIC_API_KEY      (déjà configurée)
 //   BREVO_API_KEY          (déjà configurée)
 //   BREVO_LIST_ID          (déjà configurée)
+//   BADGE_SECRET           (voir GUIDE-BADGE.md — pour le badge partageable)
+
+import { createHmac } from "crypto";
 
 // ---------- Quotas anti-abus (en mémoire, comme api/generate.js) ----------
 // Audits complets (coût ~0,04 $ Google + Claude) :
@@ -391,6 +394,35 @@ export default async function handler(req, res) {
       // Awaité : sur Vercel, une promesse non attendue peut être tuée au retour de la réponse
       await inscrireBrevo(email, metier);
 
+      // Badge partageable : URL signée (HMAC) — score figé à la date de l'audit.
+      // Aucune falsification possible, aucun coût Google au rendu.
+      let badge = null;
+      let sentinelle = null;
+      if (process.env.BADGE_SECRET) {
+        const nomBadge = (fiche.displayName?.text || "").replace(/\|/g, " ").slice(0, 60).trim();
+        const dateAudit = jourActuel();
+        if (nomBadge) {
+          const signature = createHmac("sha256", process.env.BADGE_SECRET)
+            .update(`${nomBadge}|${score.total}|${dateAudit}`)
+            .digest("hex");
+          badge = {
+            url: "https://artisan5etoiles.fr/api/badge" +
+              `?n=${encodeURIComponent(nomBadge)}` +
+              `&s=${score.total}` +
+              `&d=${dateAudit}` +
+              `&t=${signature}`
+          };
+        }
+        // Jeton d'activation de la sentinelle : prouve qu'un audit réel a eu lieu
+        // pour cet e-mail et cette fiche (empêche les inscriptions scriptées).
+        sentinelle = {
+          token: createHmac("sha256", process.env.BADGE_SECRET)
+            .update(`sentinel|${placeId}|${email}`)
+            .digest("hex"),
+          compteActuel: fiche.userRatingCount || 0
+        };
+      }
+
       return res.status(200).json({
         fiche: {
           nom: fiche.displayName?.text || "",
@@ -399,7 +431,9 @@ export default async function handler(req, res) {
           nbAvis: fiche.userRatingCount || 0
         },
         score: { total: score.total, details: score.details },
-        rapport
+        rapport,
+        badge,
+        sentinelle
       });
     }
 
