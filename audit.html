@@ -51,8 +51,8 @@ fbq('track', 'PageView');
   h2{font-family:'Archivo Black',sans-serif;font-size:clamp(20px,3vw,26px);color:var(--navy);line-height:1.15;margin-bottom:6px}
   .sub{color:var(--grey);font-size:14.5px;margin-bottom:18px}
   label{display:block;font-weight:700;font-size:13px;color:var(--navy);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 6px}
-  input,select{width:100%;font-family:inherit;font-size:15px;padding:12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink)}
-  input:focus,select:focus{outline:2px solid var(--yellow);border-color:var(--navy)}
+  input,select,textarea{width:100%;font-family:inherit;font-size:15px;padding:12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--yellow);border-color:var(--navy)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   @media(max-width:640px){.grid2{grid-template-columns:1fr}}
   .bigbtn{margin-top:22px;width:100%;background:var(--navy);color:var(--white);border:2px solid var(--navy);
@@ -257,6 +257,25 @@ fbq('track', 'PageView');
         </div>
       </div>
 
+      <div class="card hidden" id="card-badge">
+        <h2>Affichez votre score sur votre site</h2>
+        <p class="sub">Votre badge officiel, à copier-coller sur votre site, votre signature e-mail ou vos devis. Pour le mettre à jour après avoir amélioré votre fiche, refaites simplement un audit.</p>
+        <div style="text-align:center;padding:10px 0 18px">
+          <img id="badge-img" src="" alt="Badge score de fiche Google — Artisan 5 Étoiles" width="300" height="100" style="border:0;max-width:100%">
+        </div>
+        <label for="badge-code">Le code à coller sur votre site</label>
+        <textarea id="badge-code" readonly rows="4" style="font-size:12.5px;font-family:monospace;min-height:0;resize:none"></textarea>
+        <button class="copybtn" id="btn-copier-badge" type="button">Copier le code</button>
+      </div>
+
+      <div class="card hidden" id="card-sentinelle">
+        <h2>🔔 Ne ratez plus jamais un avis</h2>
+        <p class="sub">On surveille votre fiche Google gratuitement. Dès que vous recevez un nouvel avis, vous êtes prévenu par e-mail — avec un lien pour générer votre réponse en 10 secondes.</p>
+        <button class="bigbtn" id="btn-sentinelle" type="button">ACTIVER LA SURVEILLANCE GRATUITE</button>
+        <div class="err" id="err-sentinelle"></div>
+        <div class="diagnostic hidden" id="ok-sentinelle">✓ Surveillance activée. Vous recevrez un e-mail à chaque nouvel avis détecté (vérification hebdomadaire).</div>
+      </div>
+
       <div class="cta-kit">
         <h2>Passez à l'action dès aujourd'hui</h2>
         <p>Le Système Artisan 5 Étoiles : l'extension Chrome qui répond à vos avis directement depuis votre
@@ -358,6 +377,7 @@ fbq('track', 'PageView');
   });
 
   // ---- Étape 3 : lancer l'audit ----
+  let emailAudit = "", donneesSentinelle = null;
   $("btn-audit").addEventListener("click", async () => {
     effacerErreur("err-audit");
     const email = $("mail").value.trim();
@@ -367,6 +387,7 @@ fbq('track', 'PageView');
     if (!$("consent").checked) {
       return erreur("err-audit", "Merci de cocher la case pour recevoir votre audit.");
     }
+    emailAudit = email;
     cacher("etape-infos"); montrer("etape-chargement");
     try {
       const r = await fetch("/api/audit", {
@@ -436,6 +457,27 @@ fbq('track', 'PageView');
       montrer("card-exemple");
     }
 
+    if (data.badge && data.badge.url) {
+      $("badge-img").src = data.badge.url;
+      $("badge-code").value =
+        '<a href="https://artisan5etoiles.fr/audit.html" target="_blank" rel="noopener">' +
+        '<img src="' + data.badge.url + '" ' +
+        'alt="Score de fiche Google — Artisan 5 Étoiles" width="300" height="100" style="border:0"></a>';
+      montrer("card-badge");
+    }
+
+    if (data.sentinelle && data.sentinelle.token) {
+      donneesSentinelle = {
+        placeId: ficheChoisie.placeId,
+        nom: data.fiche.nom,
+        email: emailAudit,
+        metier: $("metier").value,
+        currentCount: data.sentinelle.compteActuel,
+        token: data.sentinelle.token
+      };
+      montrer("card-sentinelle");
+    }
+
     montrer("rapport");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -444,6 +486,35 @@ fbq('track', 'PageView');
     await navigator.clipboard.writeText($("exemple-reponse").textContent);
     const b = $("btn-copier");
     b.textContent = "Copié ✓"; setTimeout(() => b.textContent = "Copier la réponse", 1600);
+  });
+
+  $("btn-copier-badge").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText($("badge-code").value); } catch (e) {}
+    const b = $("btn-copier-badge");
+    b.textContent = "Copié ✓"; setTimeout(() => b.textContent = "Copier le code", 1600);
+    if (typeof fbq === "function") fbq("trackCustom", "BadgeCopied");
+  });
+
+  $("btn-sentinelle").addEventListener("click", async () => {
+    if (!donneesSentinelle) return;
+    effacerErreur("err-sentinelle");
+    const b = $("btn-sentinelle");
+    b.disabled = true; b.textContent = "ACTIVATION EN COURS…";
+    try {
+      const r = await fetch("/api/sentinel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(donneesSentinelle)
+      });
+      const data = await r.json();
+      if (!r.ok || !data.ok) throw new Error(data.error || "Erreur");
+      b.classList.add("hidden");
+      $("ok-sentinelle").classList.remove("hidden");
+      if (typeof fbq === "function") fbq("trackCustom", "SentinelActivated");
+    } catch (e) {
+      erreur("err-sentinelle", e.message);
+      b.disabled = false; b.textContent = "ACTIVER LA SURVEILLANCE GRATUITE";
+    }
   });
 
   // Tracking clic achat depuis le rapport
