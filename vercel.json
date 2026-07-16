@@ -1,5 +1,8 @@
 {
   "functions": {
     "api/generate.js": { "maxDuration": 15 }
-  }
+  },
+  "crons": [
+    { "path": "/api/sentinel-check", "schedule": "0 9 * * *" }
+  ]
 }
