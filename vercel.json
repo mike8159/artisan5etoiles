@@ -1,10 +1,11 @@
 {
   "functions": {
     "api/generate.js": { "maxDuration": 15 },
-    "api/audit.js": { "maxDuration": 25 }
+    "api/audit.js": { "maxDuration": 25 },
+    "api/prospection-daily.js": { "maxDuration": 60 }
   },
   "crons": [
     { "path": "/api/sentinel-check", "schedule": "0 9 * * *" },
-    { "path": "/api/prospection-cron", "schedule": "30 9 * * 1-5" }
+    { "path": "/api/prospection-daily", "schedule": "30 9 * * *" }
   ]
 }
