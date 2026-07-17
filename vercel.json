@@ -4,6 +4,7 @@
     "api/audit.js": { "maxDuration": 25 }
   },
   "crons": [
-    { "path": "/api/sentinel-check", "schedule": "0 9 * * *" }
+    { "path": "/api/sentinel-check", "schedule": "0 9 * * *" },
+    { "path": "/api/prospection-cron", "schedule": "30 9 * * 1-5" }
   ]
 }
